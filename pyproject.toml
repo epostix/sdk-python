@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "epostix"
+version = "1.0.0"
+description = "Epostix Developer API client"
+requires-python = ">=3.11"
+dependencies = ["httpx>=0.27,<1"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["epostix"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true

@@ -1,0 +1,105 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: ["**"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: the vendored spec must match the codegen manifest
+        run: |
+          expected=$(python3 -c "import json;print(json.load(open('.codegen.json'))['spec']['raw_sha256'])")
+          actual=$(sha256sum openapi/developer-v1.yaml | cut -d' ' -f1)
+          if [ "$expected" != "$actual" ]; then
+            echo "the vendored spec does not match .codegen.json"
+            exit 1
+          fi
+      - name: generated files must not be hand-edited
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, sys
+          manifest = json.load(open('.codegen.json'))
+          failures = 0
+          for path, expected in manifest['files'].items():
+              try:
+                  actual = hashlib.sha256(open(path, 'rb').read()).hexdigest()
+              except FileNotFoundError:
+                  print(f'missing generated file: {path}')
+                  failures += 1
+                  continue
+              if actual != expected:
+                  print(f'generated file was edited by hand: {path}')
+                  failures += 1
+          if failures:
+              sys.exit(1)
+          print(f"contract ok: {len(manifest['files'])} generated files")
+          PY
+
+  test:
+    needs: contract
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install httpx pytest pytest-asyncio mypy
+      - run: python -m pytest -q
+      - run: python -m mypy --strict epostix
+
+  prerelease:
+    needs: contract
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.15"
+          allow-prereleases: true
+      - run: pip install httpx pytest pytest-asyncio
+      - run: python -m pytest -q
+
+  package:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - run: pip install build
+      - run: python -m build
+      - name: install the built wheel into a clean environment
+        run: |
+          python -m venv /tmp/smoke
+          /tmp/smoke/bin/pip install --quiet dist/*.whl
+          /tmp/smoke/bin/python -c "
+          import epostix
+          client = epostix.Epostix(api_key='tix_test_smoke')
+          assert callable(client.emails.send_email)
+          assert callable(client.templates.versions.list_template_versions)
+          assert callable(client.attachments.upload_attachment)
+          from epostix.webhooks import EpostixWebhookVerifier
+          assert EpostixWebhookVerifier is not None
+          print('install smoke ok')
+          "
+      - uses: actions/upload-artifact@v4
+        with:
+          name: distributions
+          path: dist/

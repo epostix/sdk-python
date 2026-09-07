@@ -1,0 +1,31 @@
+{
+  "generator": "epostix-codegen",
+  "spec": {
+    "raw_sha256": "bb71a54ab7ec8025ecc7f833f8a9c260ee0a9040fcfb39608c5cde1ba952c6f2",
+    "contract_sha256": "8f5de3df7a3ac063c6f0110ffc007cea51db26cb9f2826b0d72e6e27d235b4f3"
+  },
+  "ir_sha256": "182bab5a6f40f8c424518090112332f014d04098e0969687b0f3321738d93b07",
+  "files": {
+    "epostix/_generated/models.py": "ad1cb5fed77e365c193fe31f9d17bb7b84dab9700a3824b6f5955251be01a0fe",
+    "epostix/models.py": "2f647a6f861262349357aa6bab61e9403af76c9fde9d6e68f5c5c9e25ae4fab2",
+    "epostix/_generated/codecs.py": "94d7e413d040b0592efe1cd3baf97698d0bec68ac5307dc135f0da4e09a19ad0",
+    "epostix/_generated/operations.py": "547b7896baea9dafd21f6ce4e7794f07e7e0cb8e93833a168f463245356ea963",
+    "epostix/_generated/resources/analytics.py": "3bb7c5464b1f8dbc83eaa408db8b2da660599545a9b0b88cc6e327ef44e910e1",
+    "epostix/_generated/resources/api_keys.py": "514a460940e59e8bc91af1554e08c9cc9c827b40630e5014c302969f3183dfba",
+    "epostix/_generated/resources/attachments.py": "e87758a7f2957a7093f173d6d701a692e7915117ed029fd2276a7bd7815f7ae8",
+    "epostix/_generated/resources/broadcasts.py": "e756cfb53034d502cc767f167ee5c872816231ba86a4901ac992a8bc408b4534",
+    "epostix/_generated/resources/contacts.py": "757ed6ca3e5140954b675d324c8d4f8c1ca9d592205cae2b62ab1ab5af22b9e2",
+    "epostix/_generated/resources/domains.py": "eb961f7a3c46c9ac6f0a2a81ec38163ddb24816344083aa1cb6697fed33011bf",
+    "epostix/_generated/resources/emails.py": "1a9dfe9c838d6eb31dc5f505b14c9a4f5fbdba128a4c476688cd597944dea330",
+    "epostix/_generated/resources/events.py": "0fc1e45b2c6ed11e846d9e6413cd4184e7852a2299b1460717e62536c9738a14",
+    "epostix/_generated/resources/inbound.py": "75e8a5b18195051d60cea5fd972c48a5580921c7b3511d2c90e25f048df09b83",
+    "epostix/_generated/resources/suppressions.py": "38d60c29befe9259ad5bb160f6959e2140ac696b31d6e58b1d132372c9672dc7",
+    "epostix/_generated/resources/tags.py": "9fd18587e35a1b09949808210bb91812c859b9e28e7f7cc5794adadcec29ca4d",
+    "epostix/_generated/resources/templates.py": "47d6e3be9377ae9f42dcacdcc414895588d9b2c502a99be2cf878fed5efa72d0",
+    "epostix/_generated/resources/templates_versions.py": "a9ccd5054204147eb35cb0fb107fd038cdc2658afc80ce725efe0ca3ed6dcca1",
+    "epostix/_generated/resources/webhooks.py": "4a44e89fceaf0e7687c214815b3939d532be835c955a92001945b259081b9d28",
+    "epostix/_generated/resources/webhooks_logs.py": "bd09bf857b311d080cdf09533a85b098512d09681c3401f96c89ff9b285f8d84",
+    "epostix/_generated/resources/__init__.py": "8242f142db2e5367c72f73f140e25b5c2eff97ac7af2c54c97d594c2232d68f4",
+    "epostix/_generated/__init__.py": "64747d64d6dc44e816b417cd4dd4f9d50643c3ef1f2931d6dc1fa2d6396e87ef"
+  }
+}

@@ -1,0 +1,85 @@
+name: release
+
+on:
+  release:
+    types: [created]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - run: pip install httpx pytest pytest-asyncio mypy
+      - run: python -m pytest -q
+      - run: python -m mypy --strict epostix
+      - name: the tag must match the project version
+        run: |
+          version=$(python3 -c "import tomllib;print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
+          tag="${{ github.event.release.tag_name }}"
+          if [ "v$version" != "$tag" ]; then
+            echo "pyproject.toml is $version but the tag is $tag"
+            exit 1
+          fi
+      - name: the tag must be a signed annotated tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${{ github.event.release.tag_name }}"
+          ref=$(gh api "repos/${{ github.repository }}/git/ref/tags/$tag")
+          kind=$(echo "$ref" | jq -r .object.type)
+          sha=$(echo "$ref" | jq -r .object.sha)
+
+          if [ "$kind" != "tag" ]; then
+            echo "$tag is a lightweight tag; a release must use a signed annotated tag"
+            exit 1
+          fi
+
+          object=$(gh api "repos/${{ github.repository }}/git/tags/$sha")
+          verified=$(echo "$object" | jq -r .verification.verified)
+          reason=$(echo "$object" | jq -r .verification.reason)
+
+          if [ "$verified" != "true" ]; then
+            echo "$tag is not a verified signed tag: $reason"
+            exit 1
+          fi
+
+          echo "$tag is signed and verified by GitHub ($reason)"
+
+  build:
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - run: pip install build
+      - run: python -m build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: distributions
+          path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v5
+        with:
+          name: distributions
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
