@@ -40,7 +40,7 @@ PRODUCTION_BASE_URL = "https://api.epostix.com/v1"
 STAGING_BASE_URL = "https://api.staging.epostix.com/v1"
 SANDBOX_DOMAIN = "epostix.dev"
 DEDUPLICATION_SCOPE = "api_key + environment + method + path + key, 24h"
-USER_AGENT = "epostix-python/1.0.0"
+USER_AGENT = "epostix-python/1.1.0"
 
 KeyEnvironment: TypeAlias = Literal["live", "test", "unrecognized"]
 
