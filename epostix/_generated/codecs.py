@@ -136,7 +136,7 @@ CODEC_API_KEY_CREATE_REQUEST: Codec = ModelCodec(
         FieldSpec("expires_at", "expires_at", lambda: DATETIME, True, False),
         FieldSpec("name", "name", lambda: PASSTHROUGH, True, False),
         FieldSpec("environment", "environment", lambda: CODEC_API_KEY_CREATE_REQUEST_ENVIRONMENT, False, False),
-        FieldSpec("permissions", "permissions", lambda: ArrayCodec(lambda: CODEC_PERMISSION_SCOPE), False, False),
+        FieldSpec("permissions", "permissions", lambda: ArrayCodec(lambda: PASSTHROUGH), False, False),
         FieldSpec("whitelist_ips", "whitelist_ips", lambda: ArrayCodec(lambda: PASSTHROUGH), False, False),
     ),
 )
@@ -147,7 +147,7 @@ CODEC_API_KEY_CREATE_RESPONSE: Codec = ModelCodec(
         FieldSpec("environment", "environment", lambda: CODEC_API_KEY_CREATE_RESPONSE_ENVIRONMENT, True, False),
         FieldSpec("id", "id", lambda: PASSTHROUGH, True, False),
         FieldSpec("name", "name", lambda: PASSTHROUGH, True, False),
-        FieldSpec("permissions", "permissions", lambda: ArrayCodec(lambda: CODEC_PERMISSION_SCOPE), True, False),
+        FieldSpec("permissions", "permissions", lambda: ArrayCodec(lambda: PASSTHROUGH), True, False),
         FieldSpec("token", "token", lambda: PASSTHROUGH, True, False),
         FieldSpec("token_hint", "token_hint", lambda: PASSTHROUGH, True, False),
         FieldSpec("expires_at", "expires_at", lambda: DATETIME, False, True),
@@ -169,7 +169,7 @@ CODEC_API_KEY_RESPONSE: Codec = ModelCodec(
         FieldSpec("environment", "environment", lambda: CODEC_API_KEY_RESPONSE_ENVIRONMENT, True, False),
         FieldSpec("id", "id", lambda: PASSTHROUGH, True, False),
         FieldSpec("name", "name", lambda: PASSTHROUGH, True, False),
-        FieldSpec("permissions", "permissions", lambda: ArrayCodec(lambda: CODEC_PERMISSION_SCOPE), True, False),
+        FieldSpec("permissions", "permissions", lambda: ArrayCodec(lambda: PASSTHROUGH), True, False),
         FieldSpec("token_hint", "token_hint", lambda: PASSTHROUGH, True, False),
         FieldSpec("expires_at", "expires_at", lambda: DATETIME, False, True),
         FieldSpec("last_used_at", "last_used_at", lambda: DATETIME, False, True),
@@ -182,7 +182,7 @@ CODEC_API_KEY_UPDATE_REQUEST: Codec = ModelCodec(
     models.APIKeyUpdateRequest,
     (
         FieldSpec("name", "name", lambda: PASSTHROUGH, False, False),
-        FieldSpec("permissions", "permissions", lambda: ArrayCodec(lambda: CODEC_PERMISSION_SCOPE), False, False),
+        FieldSpec("permissions", "permissions", lambda: ArrayCodec(lambda: PASSTHROUGH), False, False),
         FieldSpec("whitelist_ips", "whitelist_ips", lambda: ArrayCodec(lambda: PASSTHROUGH), False, False),
     ),
 )
@@ -203,7 +203,7 @@ CODEC_API_KEY_USAGE_LOG: Codec = ModelCodec(
         FieldSpec("path", "path", lambda: PASSTHROUGH, True, False),
         FieldSpec("status_code", "status_code", lambda: PASSTHROUGH, True, False),
         FieldSpec("ip_address", "ip_address", lambda: PASSTHROUGH, False, True),
-        FieldSpec("scope_used", "scope_used", lambda: PASSTHROUGH, False, True),
+        FieldSpec("scope_used", "scope_used", lambda: CODEC_PERMISSION_SCOPE, False, False),
     ),
 )
 CODEC_ATTACHMENT: Codec = ModelCodec(
@@ -938,6 +938,7 @@ CODEC_WEBHOOK: Codec = ModelCodec(
         FieldSpec("description", "description", lambda: PASSTHROUGH, False, False),
         FieldSpec("disabled_at", "disabled_at", lambda: DATETIME, False, True),
         FieldSpec("disabled_reason", "disabled_reason", lambda: PASSTHROUGH, False, True),
+        FieldSpec("domain_ids", "domain_ids", lambda: ArrayCodec(lambda: PASSTHROUGH), False, False),
         FieldSpec("failure_count", "failure_count", lambda: PASSTHROUGH, False, False),
         FieldSpec("updated_at", "updated_at", lambda: DATETIME, False, False),
     ),
@@ -960,6 +961,7 @@ CODEC_WEBHOOK_CREATE_REQUEST: Codec = ModelCodec(
         FieldSpec("events", "events", lambda: ArrayCodec(lambda: CODEC_WEBHOOK_EVENT_TYPE), True, False),
         FieldSpec("url", "url", lambda: PASSTHROUGH, True, False),
         FieldSpec("description", "description", lambda: PASSTHROUGH, False, False),
+        FieldSpec("domain_ids", "domain_ids", lambda: ArrayCodec(lambda: PASSTHROUGH), False, False),
         FieldSpec("secret", "secret", lambda: PASSTHROUGH, False, False),
     ),
 )
@@ -973,6 +975,7 @@ CODEC_WEBHOOK_CREATE_RESPONSE: Codec = ModelCodec(
         FieldSpec("secret", "secret", lambda: PASSTHROUGH, True, False),
         FieldSpec("url", "url", lambda: PASSTHROUGH, True, False),
         FieldSpec("description", "description", lambda: PASSTHROUGH, False, False),
+        FieldSpec("domain_ids", "domain_ids", lambda: ArrayCodec(lambda: PASSTHROUGH), False, False),
         FieldSpec("updated_at", "updated_at", lambda: DATETIME, False, False),
     ),
 )
@@ -1021,6 +1024,7 @@ CODEC_WEBHOOK_UPDATE_REQUEST: Codec = ModelCodec(
     (
         FieldSpec("active", "active", lambda: PASSTHROUGH, False, False),
         FieldSpec("description", "description", lambda: PASSTHROUGH, False, False),
+        FieldSpec("domain_ids", "domain_ids", lambda: ArrayCodec(lambda: PASSTHROUGH), False, False),
         FieldSpec("events", "events", lambda: ArrayCodec(lambda: CODEC_WEBHOOK_EVENT_TYPE), False, False),
         FieldSpec("url", "url", lambda: PASSTHROUGH, False, False),
     ),
