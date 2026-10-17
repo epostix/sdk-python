@@ -134,6 +134,7 @@ class DnsRecordKind(str, Enum):
     DKIM = "dkim"
     DMARC = "dmarc"
     MX_INBOUND = "mx_inbound"
+    OPENPGPKEY = "openpgpkey"
 
     __str__ = str.__str__
 
@@ -211,7 +212,23 @@ class EventType(str, Enum):
     EMAIL_COMPLAINED = "email.complained"
     EMAIL_FAILED = "email.failed"
     EMAIL_DELAYED = "email.delayed"
+    EMAIL_CANCELLED = "email.cancelled"
     EMAIL_RECEIVED = "email.received"
+    EMAIL_RETURN_PATH_REPLY = "email.return_path_reply"
+    DOMAIN_VERIFIED = "domain.verified"
+    DOMAIN_VERIFICATION_FAILED = "domain.verification_failed"
+    TRACKING_DOMAIN_VERIFIED = "tracking_domain.verified"
+    TRACKING_DOMAIN_VERIFICATION_FAILED = "tracking_domain.verification_failed"
+    CAMPAIGN_STARTED = "campaign.started"
+    CAMPAIGN_PAUSED = "campaign.paused"
+    CAMPAIGN_RESUMED = "campaign.resumed"
+    CAMPAIGN_COMPLETED = "campaign.completed"
+    CAMPAIGN_CANCELLED = "campaign.cancelled"
+    CAMPAIGN_AUTO_PAUSED = "campaign.auto_paused"
+    CONTACT_STATUS_CHANGED = "contact.status_changed"
+    CONTACT_IMPORT_COMPLETED = "contact.import_completed"
+    SUPPRESSION_CREATED = "suppression.created"
+    SUPPRESSION_REMOVED = "suppression.removed"
     WEBHOOK_TEST = "webhook.test"
 
     __str__ = str.__str__
@@ -297,6 +314,7 @@ class ListSuppressionsReason(str, Enum):
     COMPLAINT = "complaint"
     MANUAL = "manual"
     UNSUBSCRIBE = "unsubscribe"
+    CLEANED = "cleaned"
 
     __str__ = str.__str__
 
@@ -365,6 +383,7 @@ class SuppressionDetailReason(str, Enum):
     COMPLAINT = "complaint"
     MANUAL = "manual"
     UNSUBSCRIBE = "unsubscribe"
+    CLEANED = "cleaned"
 
     __str__ = str.__str__
 
@@ -375,6 +394,7 @@ class SuppressionReason(str, Enum):
     COMPLAINT = "complaint"
     MANUAL = "manual"
     UNSUBSCRIBE = "unsubscribe"
+    CLEANED = "cleaned"
 
     __str__ = str.__str__
 
@@ -396,7 +416,23 @@ class WebhookEventType(str, Enum):
     EMAIL_COMPLAINED = "email.complained"
     EMAIL_FAILED = "email.failed"
     EMAIL_DELAYED = "email.delayed"
+    EMAIL_CANCELLED = "email.cancelled"
     EMAIL_RECEIVED = "email.received"
+    EMAIL_RETURN_PATH_REPLY = "email.return_path_reply"
+    DOMAIN_VERIFIED = "domain.verified"
+    DOMAIN_VERIFICATION_FAILED = "domain.verification_failed"
+    TRACKING_DOMAIN_VERIFIED = "tracking_domain.verified"
+    TRACKING_DOMAIN_VERIFICATION_FAILED = "tracking_domain.verification_failed"
+    CAMPAIGN_STARTED = "campaign.started"
+    CAMPAIGN_PAUSED = "campaign.paused"
+    CAMPAIGN_RESUMED = "campaign.resumed"
+    CAMPAIGN_COMPLETED = "campaign.completed"
+    CAMPAIGN_CANCELLED = "campaign.cancelled"
+    CAMPAIGN_AUTO_PAUSED = "campaign.auto_paused"
+    CONTACT_STATUS_CHANGED = "contact.status_changed"
+    CONTACT_IMPORT_COMPLETED = "contact.import_completed"
+    SUPPRESSION_CREATED = "suppression.created"
+    SUPPRESSION_REMOVED = "suppression.removed"
 
     __str__ = str.__str__
 
@@ -460,7 +496,7 @@ class APIKeyCreateRequest(Model):
     expires_at: datetime
     name: str
     environment: APIKeyCreateRequestEnvironment | str | NotGiven = NOT_GIVEN
-    permissions: list[PermissionScope | str] | NotGiven = NOT_GIVEN
+    permissions: list[PermissionGrant] | NotGiven = NOT_GIVEN
     whitelist_ips: list[str] | NotGiven = NOT_GIVEN
 
 
@@ -470,7 +506,7 @@ class APIKeyCreateResponse(Model):
     environment: APIKeyCreateResponseEnvironment | str
     id: str
     name: str
-    permissions: list[PermissionScope | str]
+    permissions: list[PermissionGrant]
     token: str
     token_hint: str
     expires_at: datetime | None | NotGiven = NOT_GIVEN
@@ -490,7 +526,7 @@ class APIKeyResponse(Model):
     environment: APIKeyResponseEnvironment | str
     id: str
     name: str
-    permissions: list[PermissionScope | str]
+    permissions: list[PermissionGrant]
     token_hint: str
     expires_at: datetime | None | NotGiven = NOT_GIVEN
     last_used_at: datetime | None | NotGiven = NOT_GIVEN
@@ -502,7 +538,7 @@ class APIKeyResponse(Model):
 @dataclass
 class APIKeyUpdateRequest(Model):
     name: str | NotGiven = NOT_GIVEN
-    permissions: list[PermissionScope | str] | NotGiven = NOT_GIVEN
+    permissions: list[PermissionGrant] | NotGiven = NOT_GIVEN
     whitelist_ips: list[str] | NotGiven = NOT_GIVEN
 
 
@@ -521,7 +557,7 @@ class APIKeyUsageLog(Model):
     path: str
     status_code: int
     ip_address: str | None | NotGiven = NOT_GIVEN
-    scope_used: str | None | NotGiven = NOT_GIVEN
+    scope_used: PermissionScope | str | NotGiven = NOT_GIVEN
 
 
 @dataclass
@@ -1180,6 +1216,7 @@ class Webhook(Model):
     description: str | NotGiven = NOT_GIVEN
     disabled_at: datetime | None | NotGiven = NOT_GIVEN
     disabled_reason: str | None | NotGiven = NOT_GIVEN
+    domain_ids: list[str] | NotGiven = NOT_GIVEN
     failure_count: int | NotGiven = NOT_GIVEN
     updated_at: datetime | NotGiven = NOT_GIVEN
 
@@ -1199,6 +1236,7 @@ class WebhookCreateRequest(Model):
     events: list[WebhookEventType | str]
     url: str
     description: str | NotGiven = NOT_GIVEN
+    domain_ids: list[str] | NotGiven = NOT_GIVEN
     secret: str | NotGiven = NOT_GIVEN
 
 
@@ -1211,6 +1249,7 @@ class WebhookCreateResponse(Model):
     secret: str
     url: str
     description: str | NotGiven = NOT_GIVEN
+    domain_ids: list[str] | NotGiven = NOT_GIVEN
     updated_at: datetime | NotGiven = NOT_GIVEN
 
 
@@ -1254,8 +1293,11 @@ class WebhookRotateSecretResponse(Model):
 class WebhookUpdateRequest(Model):
     active: bool | NotGiven = NOT_GIVEN
     description: str | NotGiven = NOT_GIVEN
+    domain_ids: list[str] | NotGiven = NOT_GIVEN
     events: list[WebhookEventType | str] | NotGiven = NOT_GIVEN
     url: str | NotGiven = NOT_GIVEN
+
+PermissionGrant: TypeAlias = str
 
 EmailCreateAttachmentsItem: TypeAlias = Union[Attachment, AttachmentRef, AttachmentURL]
 

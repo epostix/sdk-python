@@ -15,9 +15,9 @@ from epostix import (
     response_metadata_of,
     unknown_fields_of,
 )
-from epostix._generated.codecs import CODEC_EMAIL
+from epostix._generated.codecs import CODEC_API_KEY_RESPONSE, CODEC_EMAIL, CODEC_SUPPRESSION
 from epostix._retry import ClassifyContext, classify_attempt
-from epostix.models import EmailStatus
+from epostix.models import EmailStatus, SuppressionReason
 
 FIXTURE = load_fixture("decoding")
 CASES = {case["name"]: case for case in FIXTURE["cases"]}
@@ -201,3 +201,31 @@ def test_a_known_enum_member_decodes_to_the_enum() -> None:
 
     assert email.status is EmailStatus.DELIVERED
     assert email.status == "delivered"
+
+
+def test_a_cleaned_suppression_decodes_to_a_known_reason() -> None:
+    suppression = CODEC_SUPPRESSION.decode(
+        {
+            "id": "sup_1",
+            "email": "reader@lumenmail.eu",
+            "reason": "cleaned",
+            "created_at": "2026-10-17T10:00:00Z",
+        }
+    )
+
+    assert suppression.reason is SuppressionReason.CLEANED
+
+
+def test_domain_scoped_permission_grants_decode_as_strings() -> None:
+    key = CODEC_API_KEY_RESPONSE.decode(
+        {
+            "id": "key_1",
+            "name": "ci",
+            "prefix": "tix_",
+            "environment": "live",
+            "permissions": ["sending:domain:lumenmail.eu", "emails:read"],
+            "created_at": "2026-10-17T10:00:00Z",
+        }
+    )
+
+    assert key.permissions == ["sending:domain:lumenmail.eu", "emails:read"]
