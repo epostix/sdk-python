@@ -88,6 +88,45 @@ class AttachmentContentDisposition(str, Enum):
     __str__ = str.__str__
 
 
+class BounceFault(str, Enum):
+    RECIPIENT = "recipient"
+    SENDER = "sender"
+    UNKNOWN = "unknown"
+
+    __str__ = str.__str__
+
+
+class BounceHistoryEntryKind(str, Enum):
+    BOUNCE = "bounce"
+    COMPLAINT = "complaint"
+
+    __str__ = str.__str__
+
+
+class BounceReason(str, Enum):
+    MAILBOX_UNKNOWN = "mailbox_unknown"
+    MAILBOX_FULL = "mailbox_full"
+    MAILBOX_DISABLED = "mailbox_disabled"
+    DOMAIN_UNROUTABLE = "domain_unroutable"
+    BLOCKLIST = "blocklist"
+    REPUTATION = "reputation"
+    RATE_LIMITED = "rate_limited"
+    POLICY = "policy"
+    CONTENT = "content"
+    AUTHENTICATION = "authentication"
+    SENDER_ADDRESS = "sender_address"
+    UNCLASSIFIED = "unclassified"
+
+    __str__ = str.__str__
+
+
+class BounceSource(str, Enum):
+    SMTP = "smtp"
+    NDR = "ndr"
+
+    __str__ = str.__str__
+
+
 class BroadcastStatus(str, Enum):
     DRAFT = "draft"
     SCHEDULED = "scheduled"
@@ -599,10 +638,17 @@ class AttachmentURL(Model):
 
 @dataclass
 class BounceHistoryEntry(Model):
-    bounce_subtype: str | NotGiven = NOT_GIVEN
-    bounce_type: str | NotGiven = NOT_GIVEN
-    created_at: datetime | NotGiven = NOT_GIVEN
+    created_at: datetime
+    kind: BounceHistoryEntryKind | str
+    enhanced_status_code: str | NotGiven = NOT_GIVEN
+    fault: BounceFault | str | NotGiven = NOT_GIVEN
+    feedback_type: str | NotGiven = NOT_GIVEN
+    permanent: bool | NotGiven = NOT_GIVEN
+    provider: str | NotGiven = NOT_GIVEN
+    reason: BounceReason | str | NotGiven = NOT_GIVEN
+    response: str | NotGiven = NOT_GIVEN
     smtp_code: int | NotGiven = NOT_GIVEN
+    source: BounceSource | str | NotGiven = NOT_GIVEN
 
 
 @dataclass

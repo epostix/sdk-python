@@ -24,6 +24,10 @@ CODEC_API_KEY_CREATE_REQUEST_ENVIRONMENT: Codec = EnumCodec(models.APIKeyCreateR
 CODEC_API_KEY_CREATE_RESPONSE_ENVIRONMENT: Codec = EnumCodec(models.APIKeyCreateResponseEnvironment)
 CODEC_API_KEY_RESPONSE_ENVIRONMENT: Codec = EnumCodec(models.APIKeyResponseEnvironment)
 CODEC_ATTACHMENT_CONTENT_DISPOSITION: Codec = EnumCodec(models.AttachmentContentDisposition)
+CODEC_BOUNCE_FAULT: Codec = EnumCodec(models.BounceFault)
+CODEC_BOUNCE_HISTORY_ENTRY_KIND: Codec = EnumCodec(models.BounceHistoryEntryKind)
+CODEC_BOUNCE_REASON: Codec = EnumCodec(models.BounceReason)
+CODEC_BOUNCE_SOURCE: Codec = EnumCodec(models.BounceSource)
 CODEC_BROADCAST_STATUS: Codec = EnumCodec(models.BroadcastStatus)
 CODEC_CONTACT_ENGAGEMENT_TIER: Codec = EnumCodec(models.ContactEngagementTier)
 CODEC_CONTACT_SOURCE: Codec = EnumCodec(models.ContactSource)
@@ -251,10 +255,17 @@ CODEC_ATTACHMENT_URL: Codec = ModelCodec(
 CODEC_BOUNCE_HISTORY_ENTRY: Codec = ModelCodec(
     models.BounceHistoryEntry,
     (
-        FieldSpec("bounce_subtype", "bounce_subtype", lambda: PASSTHROUGH, False, False),
-        FieldSpec("bounce_type", "bounce_type", lambda: PASSTHROUGH, False, False),
-        FieldSpec("created_at", "created_at", lambda: DATETIME, False, False),
+        FieldSpec("created_at", "created_at", lambda: DATETIME, True, False),
+        FieldSpec("kind", "kind", lambda: CODEC_BOUNCE_HISTORY_ENTRY_KIND, True, False),
+        FieldSpec("enhanced_status_code", "enhanced_status_code", lambda: PASSTHROUGH, False, False),
+        FieldSpec("fault", "fault", lambda: CODEC_BOUNCE_FAULT, False, False),
+        FieldSpec("feedback_type", "feedback_type", lambda: PASSTHROUGH, False, False),
+        FieldSpec("permanent", "permanent", lambda: PASSTHROUGH, False, False),
+        FieldSpec("provider", "provider", lambda: PASSTHROUGH, False, False),
+        FieldSpec("reason", "reason", lambda: CODEC_BOUNCE_REASON, False, False),
+        FieldSpec("response", "response", lambda: PASSTHROUGH, False, False),
         FieldSpec("smtp_code", "smtp_code", lambda: PASSTHROUGH, False, False),
+        FieldSpec("source", "source", lambda: CODEC_BOUNCE_SOURCE, False, False),
     ),
 )
 CODEC_BROADCAST: Codec = ModelCodec(
