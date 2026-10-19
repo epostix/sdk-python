@@ -224,6 +224,30 @@ class EmailBatchResultStatus(str, Enum):
     __str__ = str.__str__
 
 
+class EmailFailureFault(str, Enum):
+    RECIPIENT = "recipient"
+    SENDER = "sender"
+    PLATFORM = "platform"
+    UNKNOWN = "unknown"
+
+    __str__ = str.__str__
+
+
+class EmailFailureReason(str, Enum):
+    SUPPRESSED = "suppressed"
+    INVALID_RECIPIENT = "invalid_recipient"
+    BOUNCED = "bounced"
+    EXPIRED = "expired"
+    ATTACHMENT_TOO_LARGE = "attachment_too_large"
+    ATTACHMENT_UNAVAILABLE = "attachment_unavailable"
+    DKIM_KEY_MISMATCH = "dkim_key_mismatch"
+    SENDING_RESTRICTED = "sending_restricted"
+    PLATFORM_ERROR = "platform_error"
+    NOT_DELIVERED = "not_delivered"
+
+    __str__ = str.__str__
+
+
 class EmailMode(str, Enum):
     LIVE = "live"
     TEST = "test"
@@ -889,6 +913,7 @@ class Email(Model):
     delivery_time_ms: int | NotGiven = NOT_GIVEN
     error_message: str | NotGiven = NOT_GIVEN
     events: list[EmailEvent] | NotGiven = NOT_GIVEN
+    failure: EmailFailure | NotGiven = NOT_GIVEN
     from_: str | NotGiven = NOT_GIVEN
     headers: dict[str, str] | NotGiven = NOT_GIVEN
     html: str | NotGiven = NOT_GIVEN
@@ -964,6 +989,19 @@ class EmailEvent(Model):
     created_at: datetime
     status: str
     event_type: str | NotGiven = NOT_GIVEN
+
+
+@dataclass
+class EmailFailedEventData(Model):
+    domain_id: str
+    email_id: str
+    failure: EmailFailure | NotGiven = NOT_GIVEN
+
+
+@dataclass
+class EmailFailure(Model):
+    fault: EmailFailureFault | str
+    reason: EmailFailureReason | str
 
 
 @dataclass
