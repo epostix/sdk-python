@@ -220,4 +220,4 @@ from .overrides import (
     RawContent as RawContent,
 )
 
-__version__ = "1.2.0"
+__version__ = "1.3.0"
