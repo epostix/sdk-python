@@ -39,6 +39,8 @@ CODEC_DNS_RECORD_TYPE: Codec = EnumCodec(models.DnsRecordType)
 CODEC_DOMAIN_STATUS: Codec = EnumCodec(models.DomainStatus)
 CODEC_EMAIL_BATCH_REQUEST_VALIDATION: Codec = EnumCodec(models.EmailBatchRequestValidation)
 CODEC_EMAIL_BATCH_RESULT_STATUS: Codec = EnumCodec(models.EmailBatchResultStatus)
+CODEC_EMAIL_FAILURE_FAULT: Codec = EnumCodec(models.EmailFailureFault)
+CODEC_EMAIL_FAILURE_REASON: Codec = EnumCodec(models.EmailFailureReason)
 CODEC_EMAIL_MODE: Codec = EnumCodec(models.EmailMode)
 CODEC_EMAIL_STATUS: Codec = EnumCodec(models.EmailStatus)
 CODEC_EVENT_TYPE: Codec = EnumCodec(models.EventType)
@@ -535,6 +537,7 @@ CODEC_EMAIL: Codec = ModelCodec(
         FieldSpec("delivery_time_ms", "delivery_time_ms", lambda: PASSTHROUGH, False, False),
         FieldSpec("error_message", "error_message", lambda: PASSTHROUGH, False, False),
         FieldSpec("events", "events", lambda: ArrayCodec(lambda: CODEC_EMAIL_EVENT), False, False),
+        FieldSpec("failure", "failure", lambda: CODEC_EMAIL_FAILURE, False, False),
         FieldSpec("from", "from_", lambda: PASSTHROUGH, False, False),
         FieldSpec("headers", "headers", lambda: MapCodec(lambda: PASSTHROUGH), False, False),
         FieldSpec("html", "html", lambda: PASSTHROUGH, False, False),
@@ -616,6 +619,21 @@ CODEC_EMAIL_EVENT: Codec = ModelCodec(
         FieldSpec("created_at", "created_at", lambda: DATETIME, True, False),
         FieldSpec("status", "status", lambda: PASSTHROUGH, True, False),
         FieldSpec("event_type", "event_type", lambda: PASSTHROUGH, False, False),
+    ),
+)
+CODEC_EMAIL_FAILED_EVENT_DATA: Codec = ModelCodec(
+    models.EmailFailedEventData,
+    (
+        FieldSpec("domain_id", "domain_id", lambda: PASSTHROUGH, True, False),
+        FieldSpec("email_id", "email_id", lambda: PASSTHROUGH, True, False),
+        FieldSpec("failure", "failure", lambda: CODEC_EMAIL_FAILURE, False, False),
+    ),
+)
+CODEC_EMAIL_FAILURE: Codec = ModelCodec(
+    models.EmailFailure,
+    (
+        FieldSpec("fault", "fault", lambda: CODEC_EMAIL_FAILURE_FAULT, True, False),
+        FieldSpec("reason", "reason", lambda: CODEC_EMAIL_FAILURE_REASON, True, False),
     ),
 )
 CODEC_EMAIL_LIST_RESPONSE: Codec = ModelCodec(
