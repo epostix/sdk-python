@@ -1,14 +1,14 @@
 {
   "generator": "epostix-codegen",
   "spec": {
-    "raw_sha256": "54379af3745df1d6ff6e25c0a00105eefcc7887a70aaf39db0998e3ffce4a8a7",
-    "contract_sha256": "8bf52ce46c813c19a334353438be0aa57e581a6b4a81fa6c03ccb6c8c36d47e0"
+    "raw_sha256": "e7ef8af9b3797cc5b68b5dcc90f9517022db621142c784bd1df5a3421cb2f6ad",
+    "contract_sha256": "3bb4dd18b2785d2642ff6116344c3d71b3a404b12e216c4a169d92e674a91415"
   },
-  "ir_sha256": "b6ce8bbe98f47fad49e3c929de5d8094da77a2144ec228074cbb5dc87fcb1193",
+  "ir_sha256": "31f1e7f637a7eee8bd9f993ca51ebfdda22095975cd07a367d1fc029542c27a2",
   "files": {
-    "epostix/_generated/models.py": "c4136a675f0e16196f56b7953298282e5fb7ab24fa89075ecab4f261d9b395ff",
-    "epostix/models.py": "83822bc6669a34bc59426573aca0611a5bad4ebfac538b708a0d45013034b4d9",
-    "epostix/_generated/codecs.py": "bdb7606fef375e534fc8619938e90e268a7a952ff1f0e943e9453882fe46df14",
+    "epostix/_generated/models.py": "a3bbe97186d79ff58f2bd3489f98adc2bd28f50a4e3aef93740fa56e197eb7f9",
+    "epostix/models.py": "5323c336580d61c31d97f29857db7d592443963cb59b96d1ca4d962981cba0ae",
+    "epostix/_generated/codecs.py": "80e5e379041ac6aecb3f38345be97ce975759c32468a1909faabbb613a60fd8a",
     "epostix/_generated/operations.py": "547b7896baea9dafd21f6ce4e7794f07e7e0cb8e93833a168f463245356ea963",
     "epostix/_generated/resources/analytics.py": "3bb7c5464b1f8dbc83eaa408db8b2da660599545a9b0b88cc6e327ef44e910e1",
     "epostix/_generated/resources/api_keys.py": "514a460940e59e8bc91af1554e08c9cc9c827b40630e5014c302969f3183dfba",

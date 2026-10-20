@@ -54,6 +54,7 @@ CODEC_LIST_EMAILS_STATUS: Codec = EnumCodec(models.ListEmailsStatus)
 CODEC_LIST_EVENTS_EVENT_TYPE: Codec = EnumCodec(models.ListEventsEventType)
 CODEC_LIST_SUPPRESSIONS_REASON: Codec = EnumCodec(models.ListSuppressionsReason)
 CODEC_LIST_WEBHOOK_LOGS_STATUS: Codec = EnumCodec(models.ListWebhookLogsStatus)
+CODEC_MAILBOX_PROVIDER: Codec = EnumCodec(models.MailboxProvider)
 CODEC_PERMISSION_SCOPE: Codec = EnumCodec(models.PermissionScope)
 CODEC_SPAM_ACTION: Codec = EnumCodec(models.SpamAction)
 CODEC_SPAM_CHECK_RESULT_VERDICT: Codec = EnumCodec(models.SpamCheckResultVerdict)
@@ -263,7 +264,7 @@ CODEC_BOUNCE_HISTORY_ENTRY: Codec = ModelCodec(
         FieldSpec("fault", "fault", lambda: CODEC_BOUNCE_FAULT, False, False),
         FieldSpec("feedback_type", "feedback_type", lambda: PASSTHROUGH, False, False),
         FieldSpec("permanent", "permanent", lambda: PASSTHROUGH, False, False),
-        FieldSpec("provider", "provider", lambda: PASSTHROUGH, False, False),
+        FieldSpec("provider", "provider", lambda: CODEC_MAILBOX_PROVIDER, False, False),
         FieldSpec("reason", "reason", lambda: CODEC_BOUNCE_REASON, False, False),
         FieldSpec("response", "response", lambda: PASSTHROUGH, False, False),
         FieldSpec("smtp_code", "smtp_code", lambda: PASSTHROUGH, False, False),
