@@ -123,6 +123,7 @@ class BounceReason(str, Enum):
 class BounceSource(str, Enum):
     SMTP = "smtp"
     NDR = "ndr"
+    SUPPRESSION_LIST = "suppression_list"
 
     __str__ = str.__str__
 
@@ -386,6 +387,32 @@ class ListWebhookLogsStatus(str, Enum):
     PENDING = "pending"
     SUCCESS = "success"
     FAILED = "failed"
+
+    __str__ = str.__str__
+
+
+class MailboxProvider(str, Enum):
+    GMAIL = "gmail"
+    MICROSOFT = "microsoft"
+    YAHOO = "yahoo"
+    APPLE = "apple"
+    PROTON = "proton"
+    ZOHO = "zoho"
+    GMX = "gmx"
+    WP = "wp"
+    ONET = "onet"
+    INTERIA = "interia"
+    MAILRU = "mailru"
+    YANDEX = "yandex"
+    ORANGE = "orange"
+    FREE = "free"
+    SFR = "sfr"
+    LAPOSTE = "laposte"
+    TONLINE = "tonline"
+    SEZNAM = "seznam"
+    ITALIAONLINE = "italiaonline"
+    COMCAST = "comcast"
+    OTHER = "other"
 
     __str__ = str.__str__
 
@@ -668,7 +695,7 @@ class BounceHistoryEntry(Model):
     fault: BounceFault | str | NotGiven = NOT_GIVEN
     feedback_type: str | NotGiven = NOT_GIVEN
     permanent: bool | NotGiven = NOT_GIVEN
-    provider: str | NotGiven = NOT_GIVEN
+    provider: MailboxProvider | str | NotGiven = NOT_GIVEN
     reason: BounceReason | str | NotGiven = NOT_GIVEN
     response: str | NotGiven = NOT_GIVEN
     smtp_code: int | NotGiven = NOT_GIVEN
